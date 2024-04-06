@@ -13,7 +13,7 @@
         "fe:build": "yarn workspace next build",
         "fe:start": "yarn workspace next start",
         "fe:lint": "yarn workspace next lint",
-        "contracts:build": "cd packages/contract && forge build",
-        "contracts:deploy": "cd packages/contract && suave-geth spell deploy OnChainState.sol:OnChainState"
+        "contracts:build": "cd packages/forge && forge build",
+        "contracts:deploy": "cd packages/forge && suave-geth spell deploy OnChainState.sol:OnChainState"
     }
 }
