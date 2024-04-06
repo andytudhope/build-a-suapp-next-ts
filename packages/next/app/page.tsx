@@ -13,7 +13,7 @@ import {
 } from '@flashbots/suave-viem/chains/utils'
 
 import { deployedAddress } from '@/constants/addresses';
-import OnChainState from '../../contract/out/OnChainState.sol/OnChainState.json';
+import OnChainState from '../../contracts/out/OnChainState.sol/OnChainState.json';
 import Header from '@/components/Header';
 import Links from '@/components/Links';
 
