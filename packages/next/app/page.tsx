@@ -7,12 +7,13 @@ import {
   SuaveWallet,
   SuaveProvider,
   TransactionRequestSuave,
+  SuaveTxRequestTypes,
   TransactionReceiptSuave,
   TransactionSuave,
 } from '@flashbots/suave-viem/chains/utils'
 
 import { deployedAddress } from '@/constants/addresses';
-import OnChainState from '../../forge/out/OnChainState.sol/OnChainState.json';
+import OnChainState from '../../contracts/out/OnChainState.sol/OnChainState.json';
 import Header from '@/components/Header';
 import Links from '@/components/Links';
 
@@ -46,7 +47,7 @@ export default function Home() {
         });
       });
     }
-  }, [suaveWallet, hash, pendingReceipt, provider]);
+  }, [suaveWallet, balance, hash, pendingReceipt, provider]);
 
   const connectWallet = async () => {
     const ethereum = window.ethereum
@@ -92,23 +93,23 @@ export default function Home() {
     setHash(sendRes);
   }
 
-  const sendExample = async () => {
+  const sendCCR = async () => {
     if (!provider || !suaveWallet) {
       console.warn(`provider=${provider}\nsuaveWallet=${suaveWallet}`)
       return
     }
     const nonce = await provider.getTransactionCount({ address: suaveWallet.account.address });
     const ccr: TransactionRequestSuave = {
-      confidentialInputs: '0x',
+      confidentialInputs: '0x000000000000000000000000000000000000000000000000000000000000000',
       kettleAddress: '0xB5fEAfbDD752ad52Afb7e1bD2E40432A485bBB7F', // Use 0x03493869959C866713C33669cA118E774A30A0E5 on Rigil.
       to: deployedAddress,
-      gasPrice: 2000000000n,
-      gas: 100000n,
-      type: '0x43',
+      gasPrice: 10000000000n,
+      gas: 420000n,
+      type: SuaveTxRequestTypes.ConfidentialRequest,
       chainId: 16813125, // chain id of local SUAVE devnet and Rigil
       data: encodeFunctionData({
         abi: OnChainState.abi,
-        functionName: 'example',
+        functionName: 'offchain',
       }),
       nonce
     };
@@ -117,7 +118,7 @@ export default function Home() {
     setPendingReceipt(provider.waitForTransactionReceipt({ hash }));
   }
 
-  const sendNilExample = async () => {
+  const sendFailure = async () => {
     alert("A confidential request fails if it tries to modify the state directly.")
   }
 
@@ -186,18 +187,18 @@ export default function Home() {
                   <p className='text-l font-bold'>Use callback</p>
                   <button
                     className='border border-black rounded-lg bg-black text-white p-2 md:p-4 my-4 dark:bg-transparent dark:text-black'
-                    onClick={sendExample}
+                    onClick={sendCCR}
                   >
-                    example()
+                    offchain()
                   </button>
                 </div>
                 <div className='border border-gray-300 rounded-xl mx-2 my-4 p-4 w-full'>
                   <p className='text-l font-bold'>Change directly</p>
                   <button
                     className='border border-black rounded-lg bg-black text-white p-2 md:p-4 my-4 dark:bg-transparent dark:text-black'
-                    onClick={sendNilExample}
+                    onClick={sendFailure}
                   >
-                    nilExample()
+                    failure()
                   </button>
                 </div>
               </div>
@@ -231,7 +232,7 @@ export default function Home() {
 
       {txResult && <div>
         <p>
-          Confidential Compute Result <code style={{ color: txResult.confidentialComputeResult === getFunctionSelector('exampleCallback()') ? "#0f0" : "#f00" }}>{txResult.confidentialComputeResult}</code>
+          Confidential Compute Result <code style={{ color: txResult.confidentialComputeResult.slice(0, 10) === getFunctionSelector('onchain()') ? "#0f0" : "#f00" }}>{txResult.confidentialComputeResult.slice(0, 6)}...{txResult.confidentialComputeResult.slice(-6)}</code>
         </p>
       </div>}
 

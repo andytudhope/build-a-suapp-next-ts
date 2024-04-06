@@ -9,20 +9,36 @@ This repo will help you get started building a SUAPP with a modern frontend.
 ```bash
 $ cd build-a-suapp
 $ yarn
-$ cd packages/forge/ && forge install
+$ cd packages/contracts/ && forge install
 ```
 
-You should now be able to compile (and deploy) your contracts with:
+You should now be able to compile (and deploy) your contract with:
 
 ```bash
 $ yarn contracts:build 
 ```
 
+If you need to get SUAVE, simply run:
+
 ```bash
-chmod +x packages/forge/deploy && yarn contracts:deploy # will deploy whatever contracts you tell it to, if you have SUAVE running locally
+curl -L https://suaveup.flashbots.net | bash
 ```
 
-You can start the frontend with:
+And start a local node with:
+
+```bash
+suave-geth --suave.dev --suave.eth.external-whitelist='*'
+```
+
+With SUAVE running locally,deploy your contracts with:
+
+```bash
+yarn contracts:deploy
+```
+
+Copy the deployed address in `packages/next/constants/addresses.tsx`.
+
+Start the frontend with:
 
 ```bash
 yarn fe:dev
@@ -33,5 +49,5 @@ yarn fe:dev
 1. Confidential Compute Requests (CCRs) on SUAVE do not work with wallets that implement the EIP-1193 Javascript API. Therefore, we use the unsafe `eth_sign` method to sign CCRs, which does work, but requires that you enable this functionality in wallets like MetaMask.
     1. To do so in MetaMask, go to "Settings" -> "Advanced" -> scroll to bottom -> switch Eth_sign requests on.
 2. This template assumes that you are running SUAVE locally and have your browser wallet connected to `localhost:8545`.
-3. No tests are included in `forge`, as it is not trivial to test new precompiles and different transaction types (i.e. CCRs) in `forge` at this time.
+3. No tests are included in `forge`.
 4. If you want to pirate ready-to-use typescript components for your frontend, we recommend you do so from [scaffold-eth2](https://github.com/scaffold-eth/scaffold-eth-2).
