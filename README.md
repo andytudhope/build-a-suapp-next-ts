@@ -7,9 +7,9 @@ This repo will help you get started building a SUAPP with a modern frontend.
 **We recommend using node v20.10.0 and npm v10.2.3**:
 
 ```bash
-$ cd build-a-suapp
+$ git clone --recurse-submodules git@github.com:andytudhope/build-a-suapp-next-ts.git suapp
+$ cd suapp
 $ yarn
-$ cd packages/contracts/ && forge install
 ```
 
 You should now be able to compile (and deploy) your contract with:
